@@ -1,0 +1,10 @@
+2024-12-04 09:40:35.777 [main] INFO  o.s.t.c.support.AnnotationConfigContextLoaderUtils-Could not detect default configuration classes for test class [com.wn.TliasWebManagementApplicationTests]: TliasWebManagementApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-12-04 09:40:35.814 [main] INFO  o.s.b.t.context.SpringBootTestContextBootstrapper-Found @SpringBootConfiguration com.wn.TliasWebManagementApplication for test class com.wn.TliasWebManagementApplicationTests
+2024-12-04 09:40:35.962 [main] INFO  com.wn.TliasWebManagementApplicationTests-Starting TliasWebManagementApplicationTests using Java 21.0.5 with PID 3754 (started by chinhae in /Users/chinhae/Documents/JAVA/IDEA/GitCode/web-project01/tlias-web-management)
+2024-12-04 09:40:35.962 [main] INFO  com.wn.TliasWebManagementApplicationTests-No active profile set, falling back to 1 default profile: "default"
+2024-12-04 09:40:36.526 [main] INFO  com.wn.TliasWebManagementApplicationTests-Started TliasWebManagementApplicationTests in 0.66 seconds (process running for 1.049)
+2024-12-04 09:40:36.962 [main] INFO  com.zaxxer.hikari.HikariDataSource-HikariPool-1 - Starting...
+2024-12-04 09:40:37.146 [main] INFO  com.zaxxer.hikari.pool.HikariPool-HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2cce10bc
+2024-12-04 09:40:37.147 [main] INFO  com.zaxxer.hikari.HikariDataSource-HikariPool-1 - Start completed.
+2024-12-04 09:40:37.191 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource-HikariPool-1 - Shutdown initiated...
+2024-12-04 09:40:37.193 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource-HikariPool-1 - Shutdown completed.

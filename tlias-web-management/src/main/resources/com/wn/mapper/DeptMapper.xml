@@ -1,0 +1,38 @@
+<!--定义Mapper映射文件的约束和基本结构-->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wn.mapper.DeptMapper">
+    <!--新增部门-->
+    <insert id="insert">
+        INSERT INTO dept(name, create_time, update_time)
+        VALUES (#{name}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!--根据id修改部门-->
+    <update id="updateById">
+        UPDATE dept
+        SET name        = #{name},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!--根据id删除部门-->
+    <delete id="deleteById">
+        DELETE
+        FROM dept
+        WHERE id = #{id}
+    </delete>
+
+    <!--查询所有的部门信息-->
+    <select id="findAll" resultType="com.wn.pojo.Dept">
+        select("SELECT id,name,create_time,update_time FROM dept ORDER BY update_time DESC")
+    </select>
+
+    <!--根据id查询部门-->
+    <select id="getById" resultType="com.wn.pojo.Dept">
+        SELECT id, name, create_time, update_time
+        FROM dept
+        WHERE id = #{id}
+    </select>
+</mapper>
