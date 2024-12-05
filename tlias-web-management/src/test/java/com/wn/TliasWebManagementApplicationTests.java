@@ -16,7 +16,7 @@ class TliasWebManagementApplicationTests {
 
     @Test
     public void testList(){
-        List<Emp> empList = empMapper.list();
+        List<Emp> empList = empMapper.list(null);
         empList.forEach(System.out::println);
     }
 }

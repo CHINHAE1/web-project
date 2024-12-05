@@ -6,7 +6,7 @@
     <!--新增部门-->
     <insert id="insert">
         INSERT INTO dept(name, create_time, update_time)
-        VALUES (#{name}, #{createTime}, #{updateTime})
+        VALUES(#{name}, #{createTime}, #{updateTime})
     </insert>
 
     <!--根据id修改部门-->
@@ -19,14 +19,14 @@
 
     <!--根据id删除部门-->
     <delete id="deleteById">
-        DELETE
-        FROM dept
-        WHERE id = #{id}
+        DELETE FROM dept WHERE id = #{id}
     </delete>
 
     <!--查询所有的部门信息-->
     <select id="findAll" resultType="com.wn.pojo.Dept">
-        select("SELECT id,name,create_time,update_time FROM dept ORDER BY update_time DESC")
+        SELECT id, name, create_time, update_time
+        FROM dept
+        ORDER BY update_time DESC
     </select>
 
     <!--根据id查询部门-->
