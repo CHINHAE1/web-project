@@ -13,6 +13,10 @@ spring:
       max-file-size: 100MB
       #最大请求体总大小
       max-request-size: 100MB
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
 
 #mybatis配置
 mybatis:

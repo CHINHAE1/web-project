@@ -4,6 +4,8 @@ import com.wn.pojo.Emp;
 import com.wn.pojo.EmpQueryParam;
 import com.wn.pojo.PageResult;
 
+import java.util.List;
+
 /**
  * 这个类是：
  *
@@ -23,6 +25,23 @@ public interface EmpService {
      * 分页查询
      */
     PageResult page(EmpQueryParam empQueryParam);
+
+    /**
+     * 批量删除员工
+     */
+    void deleteByIds(List<Integer> ids);
+
+
+    /**
+     * 根据ID查询员工的详细信息
+     */
+    Emp getInfo(Integer id);
+
+    /**
+     * 更新员工信息
+     * @param emp
+     */
+    void update(Emp emp);
 
     /**
      * 分页查询
