@@ -7,8 +7,10 @@ import com.wn.mapper.EmpMapper;
 import com.wn.pojo.Emp;
 import com.wn.pojo.EmpExpr;
 import com.wn.pojo.EmpQueryParam;
+import com.wn.pojo.LoginInfo;
 import com.wn.pojo.PageResult;
 import com.wn.service.EmpService;
+import com.wn.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +18,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 这个类是：员工管理
@@ -103,6 +107,35 @@ public class EmpServiceImpl implements EmpService {
             empExprMapper.insertBatch(exprList);
         }
     }
+
+    /**
+     * 获取所有员工信息
+     * @return
+     */
+    @Override
+    public List<Emp> getEmpList() {
+        return empMapper.empAllList();
+    }
+
+    /**
+     * 登录
+     */
+    @Override
+    public LoginInfo login(Emp emp) {
+        Emp empLogin = empMapper.getUsernameAndPassword(emp);
+        if(empLogin != null){
+            //1. 生成JWT令牌
+            Map<String, Object> dataMap = new HashMap<>();
+            dataMap.put("id", empLogin.getId());
+            dataMap.put("username", empLogin.getUsername());
+
+            String jwt = JwtUtils.generateJwt(dataMap);
+            LoginInfo loginInfo = new LoginInfo(empLogin.getId(), empLogin.getUsername(), empLogin.getName(), jwt);
+            return loginInfo;
+        }
+        return null;
+    }
+
 
     /**
      * 原始方式的分页查询

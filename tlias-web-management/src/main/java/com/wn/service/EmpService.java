@@ -2,6 +2,7 @@ package com.wn.service;
 
 import com.wn.pojo.Emp;
 import com.wn.pojo.EmpQueryParam;
+import com.wn.pojo.LoginInfo;
 import com.wn.pojo.PageResult;
 
 import java.util.List;
@@ -42,6 +43,17 @@ public interface EmpService {
      * @param emp
      */
     void update(Emp emp);
+
+    /**
+     * 查询所有员工
+     */
+    List<Emp> getEmpList();
+
+
+    /**
+     * 登录
+     */
+    LoginInfo login(Emp emp);
 
     /**
      * 分页查询

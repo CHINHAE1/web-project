@@ -5,7 +5,6 @@ import com.github.pagehelper.PageHelper;
 import com.wn.mapper.ClazzMapper;
 import com.wn.pojo.Clazz;
 import com.wn.pojo.ClazzQueryParam;
-import com.wn.pojo.Emp;
 import com.wn.pojo.PageResult;
 import com.wn.service.ClazzService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +44,24 @@ public class ClazzServiceImpl implements ClazzService {
 
 
     @Override
-    public List<Emp> getMasterList() {
-        return clazzMapper.listMasters();
-    }
-
-    @Override
     public boolean addClazz(Clazz clazz) {
         return clazzMapper.insertClazz(clazz) > 0;
     }
+
+    @Override
+    public Clazz getClazzById(Integer id) {
+        return clazzMapper.getClazzById(id);
+    }
+
+    @Override
+    public void update(Clazz clazz) {
+        clazzMapper.update(clazz);
+    }
+
+    @Override
+    public List<Clazz> getClazzList() {
+        return clazzMapper.clazzList();
+    }
+
+
 }

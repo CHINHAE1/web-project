@@ -1,6 +1,7 @@
 package com.wn.controller;
 
 
+import com.wn.pojo.ClassesOption;
 import com.wn.pojo.JobOption;
 import com.wn.pojo.Result;
 import com.wn.service.ReportService;
@@ -46,5 +47,25 @@ public class ReportController {
         log.info("统计员工性别信息");
         List<Map> genderList = reportService.getEmpGenderData();
         return Result.success(genderList);
+    }
+
+    /**
+     * 学员学历统计
+     */
+    @GetMapping("/studentDegreeData")
+    public Result getStudentDegreeData(){
+        log.info("学员学历统计");
+        List<Map> degreeList = reportService.getStudentDegreeData();
+        return Result.success(degreeList);
+    }
+
+    /**
+     * 班级人数统计
+     */
+    @GetMapping("/studentCountData")
+    public Result getStudentCountData(){
+        log.info("各个班级人数统计");
+        ClassesOption classesOption = reportService.getStudentData();
+        return Result.success(classesOption);
     }
 }

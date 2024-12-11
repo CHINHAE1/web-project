@@ -22,6 +22,8 @@
         where id = #{id}
     </update>
 
+
+
     <!-- 统计各个职位的员工人数 -->
     <select id="countEmpJobData" resultType="java.util.Map">
         select
@@ -105,4 +107,22 @@
         from emp e left join emp_expr ee on e.id = ee.emp_id
         where e.id = #{id}
     </select>
+
+    <!-- 查询可选班主任列表 -->
+    <select id="empAllList" resultType="com.wn.pojo.Emp">
+        SELECT
+            id, username, password, name, gender, phone, job, salary, image, entry_date, dept_id, create_time, update_time
+        FROM
+            emp
+        WHERE
+            job = 1 -- 职位为班主任
+    </select>
+
+
+    <!--根据用户名和密码查询员工信息-->
+    <select id="getUsernameAndPassword" resultType="com.wn.pojo.Emp">
+        select * from emp where username = #{username} and password = #{password}
+    </select>
+
+
 </mapper>

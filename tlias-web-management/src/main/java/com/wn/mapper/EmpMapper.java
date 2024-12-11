@@ -79,4 +79,12 @@ public interface EmpMapper {
      */
     @MapKey("name")
     List<Map> countEmpGenderData();
+
+
+    List<Emp> empAllList();
+
+    /**
+     * 根据用户名和密码查询员工信息
+     */
+    Emp getUsernameAndPassword(Emp emp);
 }

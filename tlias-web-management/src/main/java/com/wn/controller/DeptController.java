@@ -77,8 +77,12 @@ public class DeptController {
     public Result delete(Integer id) {
         //System.out.println("根据id删除部门的数据" + id);
         log.info("根据id删除部门: {}", id);
-        deptService.deleteById(id);
-        return Result.success();
+        try {
+            deptService.deleteById(id);
+            return Result.success("部门删除成功");
+        } catch (RuntimeException e) {
+            return Result.success();
+        }
     }
 
     /**

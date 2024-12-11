@@ -38,6 +38,7 @@ public interface DeptMapper {
     //@Delete("DELETE FROM dept WHERE id = #{id}")
     void deleteById(Integer id);
 
+
     /**
      * 新增部门
      */
@@ -55,4 +56,6 @@ public interface DeptMapper {
      */
     //@Update("UPDATE dept SET name = #{name},update_time = #{updateTime} WHERE id = #{id}")
     void updateById(Dept dept);
+
+
 }

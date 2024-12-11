@@ -3,7 +3,6 @@ package com.wn.controller;
 
 import com.wn.pojo.Clazz;
 import com.wn.pojo.ClazzQueryParam;
-import com.wn.pojo.Emp;
 import com.wn.pojo.PageResult;
 import com.wn.pojo.Result;
 import com.wn.service.ClazzService;
@@ -13,9 +12,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -46,12 +45,11 @@ public class ClazzController {
     }
 
 
-
-/**
- * 根据id删除部门
- */
+    /**
+     * 根据id删除部门
+     */
     @DeleteMapping("/{id}")
-    public Result delete(@PathVariable("id") Integer id) {
+    public Result delete(@PathVariable Integer id) {
         log.info("根据id删除班级数据，id为：{}", id);
         clazzService.deleteById(id);
         return Result.success();
@@ -59,28 +57,49 @@ public class ClazzController {
 
     /**
      * 根据参数执行不同操作
-     * @param action 执行动作（query: 获取班主任列表, add: 添加班级信息）
      * @param clazz  班级信息（仅在添加时需要）
      * @return 响应结果
      */
     @PostMapping
-    public Result handleRequest(@RequestParam String action, @RequestBody(required = false) Clazz clazz) {
-        if ("query".equals(action)) {
-            // 获取班主任列表
-            List<Emp> masters = clazzService.getMasterList();
-            return Result.success(masters);
-        } else if ("add".equals(action)) {
-            // 添加班级信息
-            boolean success = clazzService.addClazz(clazz);
-            if (success) {
-                return Result.success("班级添加成功");
-            } else {
-                return Result.error("班级添加失败: 参数错误");
-            }
+    public Result handleRequest(@RequestBody(required = false) Clazz clazz) {
+        log.info("添加班级，参数：{}", clazz);
+        // 添加班级信息
+        boolean success = clazzService.addClazz(clazz);
+        if (success) {
+            return Result.success("班级添加成功");
         } else {
-            return Result.error("无效的操作类型");
+            return Result.error("班级添加失败: 参数错误");
         }
     }
 
+    /**
+     * 根据ID查询
+     */
+    @GetMapping("/{id}")
+    public Result getById(@PathVariable Integer id) {
+        log.info("根据id查询班级信息，id为：{}", id);
+        Clazz clazz = clazzService.getClazzById(id);
+        return Result.success(clazz);
+    }
 
+    /**
+     * 修改班级
+     */
+    @PutMapping
+    public Result update(@RequestBody Clazz clazz) {
+        log.info("修改班级信息，参数为：{}", clazz);
+        clazzService.update(clazz);
+        return Result.success();
+    }
+
+    /**
+     * 查询所有班级
+     */
+    @GetMapping("/list")
+    public Result list() {
+        log.info("查询所有班级");
+        List<Clazz> clazzList = clazzService.getClazzList();
+        return Result.success(clazzList);
+    }
 }
+

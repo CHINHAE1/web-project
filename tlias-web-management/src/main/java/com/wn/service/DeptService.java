@@ -1,7 +1,6 @@
 package com.wn.service;
 
 import com.wn.pojo.Dept;
-import com.wn.pojo.Result;
 
 import java.util.List;
 

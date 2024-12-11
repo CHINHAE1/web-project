@@ -2,7 +2,6 @@ package com.wn.service;
 
 import com.wn.pojo.Clazz;
 import com.wn.pojo.ClazzQueryParam;
-import com.wn.pojo.Emp;
 import com.wn.pojo.PageResult;
 
 import java.util.List;
@@ -31,5 +30,9 @@ public interface ClazzService {
      */
     boolean addClazz(Clazz clazz);
 
-    List<Emp> getMasterList();
+    Clazz getClazzById(Integer id);
+
+    void update(Clazz clazz);
+
+    List<Clazz> getClazzList();
 }

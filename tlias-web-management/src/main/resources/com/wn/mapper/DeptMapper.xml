@@ -35,4 +35,5 @@
         FROM dept
         WHERE id = #{id}
     </select>
+
 </mapper>

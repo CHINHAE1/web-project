@@ -2,7 +2,6 @@ package com.wn.mapper;
 
 import com.wn.pojo.Clazz;
 import com.wn.pojo.ClazzQueryParam;
-import com.wn.pojo.Emp;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -33,5 +32,9 @@ public interface ClazzMapper {
      */
     int insertClazz(Clazz clazz);
 
-    List<Emp> listMasters();
+    Clazz getClazzById(Integer id);
+
+    void update(Clazz clazz);
+
+    List<Clazz> clazzList();
 }

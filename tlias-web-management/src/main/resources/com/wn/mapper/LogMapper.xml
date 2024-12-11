@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wn.mapper.LogMapper">
+    <!-- 查询日志列表 -->
+    <select id="getLogList" resultType="com.wn.pojo.Log">
+        SELECT
+            id,
+            operate_emp_id AS operateEmpId,
+            operate_time AS operateTime,
+            class_name AS className,
+            method_name AS methodName,
+            method_params AS methodParams,
+            return_value AS returnValue,
+            cost_time AS costTime,
+            operate_emp_name AS operateEmpName
+        FROM
+            log
+        ORDER BY
+            operate_time DESC
+    </select>
+</mapper>

@@ -45,6 +45,11 @@ public class EmpController {
         return Result.success(pageResult);
     }*/
 
+    /**
+     * 分页查询员工信息
+     * @param empQueryParam
+     * @return
+     */
     @GetMapping
     public Result page(EmpQueryParam empQueryParam) {
         log.info("查询请求参数： {}", empQueryParam);
@@ -90,5 +95,15 @@ public class EmpController {
         log.info("修改员工信息, {}", emp);
         empService.update(emp);
         return Result.success();
+    }
+
+    /**
+     * 查询所有员工
+     */
+    @GetMapping("/list")
+    public Result empAllList(){
+        log.info("查询所有员工");
+        List<Emp> empAllList = empService.getEmpList();
+        return Result.success(empAllList);
     }
 }

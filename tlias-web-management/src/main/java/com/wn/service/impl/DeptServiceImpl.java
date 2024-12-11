@@ -22,6 +22,7 @@ public class DeptServiceImpl implements DeptService {
     @Autowired
     private DeptMapper deptMapper;
 
+
     @Override
     public List<Dept> findAll() {
         return deptMapper.findAll();

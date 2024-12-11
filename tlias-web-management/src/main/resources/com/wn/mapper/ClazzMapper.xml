@@ -4,6 +4,33 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wn.mapper.ClazzMapper">
 
+    <!--修改班级信息-->
+    <update id="update">
+        UPDATE clazz
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="room != null and room != ''">
+                room = #{room},
+            </if>
+            <if test="beginDate != null">
+                begin_date = #{beginDate},
+            </if>
+            <if test="endDate != null">
+                end_date = #{endDate},
+            </if>
+            <if test="masterId != null">
+                master_id = #{masterId},
+            </if>
+            <if test="subject != null and subject != ''">
+                subject = #{subject},
+            </if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
     <!--根据id删除班级-->
     <delete id="deleteById">
         delete from clazz where id = #{id}
@@ -61,15 +88,46 @@
         c.id = #{id}
     </select>
 
-    <!-- 查询可选班主任列表 -->
-    <select id="listMasters" resultType="com.wn.pojo.Emp">
+    <!--根据id查询班级信息-->
+    <select id="getClazzById" resultType="com.wn.pojo.Clazz">
         SELECT
-            id, name, job
+        c.id,
+        c.name,
+        c.room,
+        c.begin_date AS beginDate,
+        c.end_date AS endDate,
+        c.master_id AS masterId,
+        c.subject,
+        c.create_time AS createTime,
+        c.update_time AS updateTime,
+        e.name AS masterName
         FROM
-            emp
+        clazz c
+        LEFT JOIN
+        emp e ON c.master_id = e.id
         WHERE
-            job = 1 -- 职位为班主任
+        c.id= #{id}
     </select>
+
+    <!--查询所有班级信息-->
+    <select id="clazzList" resultType="com.wn.pojo.Clazz">
+        SELECT
+        c.id,
+        c.name,
+        c.room,
+        c.begin_date AS beginDate,
+        c.end_date AS endDate,
+        c.master_id AS masterId,
+        c.subject,
+        c.create_time AS createTime,
+        c.update_time AS updateTime,
+        e.name AS masterName
+        FROM
+        clazz c
+        LEFT JOIN
+        emp e ON c.master_id = e.id
+    </select>
+
 
     <!-- 插入班级信息 -->
     <insert id="insertClazz" parameterType="com.wn.pojo.Clazz">
