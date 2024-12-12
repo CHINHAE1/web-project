@@ -1,6 +1,7 @@
 package com.wn.controller;
 
 
+import com.wn.anno.LogOperation;
 import com.wn.pojo.Clazz;
 import com.wn.pojo.ClazzQueryParam;
 import com.wn.pojo.PageResult;
@@ -56,10 +57,11 @@ public class ClazzController {
     }
 
     /**
-     * 根据参数执行不同操作
+     * 添加班级
      * @param clazz  班级信息（仅在添加时需要）
      * @return 响应结果
      */
+    @LogOperation
     @PostMapping
     public Result handleRequest(@RequestBody(required = false) Clazz clazz) {
         log.info("添加班级，参数：{}", clazz);
