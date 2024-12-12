@@ -43,6 +43,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         //5. 解析token，如果解析失败，返回错误结果（未登录）。
         try {
             JwtUtils.parseJWT(jwt);
+            log.info("token解析成功, 放行");
         } catch (Exception e) {
             e.printStackTrace();
             log.info("解析令牌失败, 返回错误结果");
@@ -52,6 +53,8 @@ public class TokenInterceptor implements HandlerInterceptor {
 
         //6. 放行。
         log.info("令牌合法, 放行");
+
         return true;
+
     }
 }

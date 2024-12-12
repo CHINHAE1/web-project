@@ -3,6 +3,7 @@ package com.wn.aop;
 import com.wn.anno.LogOperation;
 import com.wn.mapper.OperateLogMapper;
 import com.wn.pojo.OperateLog;
+import com.wn.utils.CurrentHolder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -56,6 +57,6 @@ public class OperationLogAspect {
     // 示例方法，获取当前用户ID
     private int getCurrentUserId() {
         // 这里应该根据实际情况从认证信息中获取当前登录用户的ID
-        return 1; // 示例返回值
+        return CurrentHolder.getCurrentId(); // 示例返回值
     }
 }
