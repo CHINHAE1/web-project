@@ -2,6 +2,7 @@ package com.wn.carrentalplatform.service;
 
 import com.wn.carrentalplatform.model.entity.User;
 import com.wn.carrentalplatform.model.vo.UserVo;
+import com.wn.carrentalplatform.util.DataGridView;
 
 /**
  * 这个类是：
@@ -20,4 +21,12 @@ public interface UserService {
     void insertUserRole(User user);
 
     void register(UserVo userVo);
+
+    /** 查询所有用户 */
+    DataGridView queryAllUser(UserVo userVo);
+
+    /** 添加用户 */
+    void addUser(UserVo userVo);
+    
+    
 }

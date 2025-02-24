@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wn.carrentalplatform.mapper.NewsMapper">
+
+    <resultMap id="newsResultMap" type="com.wn.carrentalplatform.model.entity.News">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="createtime" property="createtime"/>
+        <result column="opername" property="opername"/>
+    </resultMap>
+
+    <sql id="base_news_list">
+        id,
+        title,
+        content,
+        createtime,
+        opername
+    </sql>
+    
+    <!-- 根据条件查询公告, 或者查询所有公告 -->
+    <select id="queryAllNews" resultType="com.wn.carrentalplatform.model.entity.News">
+        select
+        <include refid="base_news_list"></include>
+        from sys_news
+        <where>
+            <if test="title != null and title != ''">
+                and title like concat("%", #{title}, "%")
+            </if>
+            <if test="content != null and content != ''">
+                and content like concat("%", #{content}, "%")
+            </if>
+            <if test="createtime != null">
+                and createtime = #{createtime}
+            </if>
+        </where>
+        order by createtime desc
+    </select>
+
+
+    <!-- 根据id查询公告 -->
+    <select id="findNewsById" resultType="com.wn.carrentalplatform.model.entity.News">
+        select
+        <include refid="base_news_list"></include>
+        from sys_news
+        where id = #{id}
+    </select>
+
+    <!-- 添加一条公告 -->
+    <insert id="addSelective" parameterType="com.wn.carrentalplatform.model.entity.News">
+        insert into sys_news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="createtime != null">
+                createtime,
+            </if>
+            <if test="opername != null">
+                opername,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+            <if test="createtime != null">
+                #{createtime},
+            </if>
+            <if test="opername != null">
+                #{opername},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 根据id修改公告 -->
+    <update id="updateNewsById" parameterType="com.wn.carrentalplatform.model.entity.News">
+        update sys_news
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            <if test="createtime != null">
+                createtime = #{createtime},
+            </if>
+            <if test="opername != null">
+                opername = #{opername},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 根据id删除公告 -->
+    <delete id="deleteNewsById" parameterType="Integer">
+        delete from sys_news where id = #{id}
+    </delete>
+
+    
+</mapper>

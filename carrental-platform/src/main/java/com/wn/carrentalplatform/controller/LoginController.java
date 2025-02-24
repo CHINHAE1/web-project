@@ -7,6 +7,7 @@ import com.wn.carrentalplatform.model.vo.UserVo;
 import com.wn.carrentalplatform.service.LogInfoService;
 import com.wn.carrentalplatform.service.UserService;
 import io.micrometer.common.util.StringUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +62,9 @@ public class LoginController {
 
     /**
      * 生成并返回图形验证码
-     * 
+     *
      * @param response HTTP响应对象，用于输出图片
-     * @param session HTTP会话对象，用于存储验证码
+     * @param session  HTTP会话对象，用于存储验证码
      * @throws IOException 当输出流写入异常时抛出
      */
     @RequestMapping("/getCode")  // 修改验证码路径
@@ -199,47 +200,57 @@ public class LoginController {
 
     /**
      * 处理用户注册请求
-     * 
+     *
      * @param userVo 用户注册信息的数据传输对象，包含用户名、密码、身份证等信息
-     * @param model Spring MVC的Model对象，用于向视图传递数据
      * @return 注册成功重定向到登录页面，失败则返回注册页面并显示错误信息
      */
     @PostMapping("/register")
-    public String register(UserVo userVo, Model model) {
+    public String register(UserVo userVo, HttpServletRequest request) {
         try {
-            // 打印接收到的注册数据，用于调试
-            System.out.println("接收到的注册数据：" + userVo);
+            // 从请求中获取参数
+            String username = request.getParameter("realname");  // 前端的用户名字段是 realname
+            String password = request.getParameter("password");  // 前端的密码字段是 password
+            String identity = request.getParameter("identity");  // 身份证号保持不变
 
-            // 进行必要的参数校验
-            if (StringUtils.isEmpty(userVo.getLoginname())) {
-                model.addAttribute("error", "用户名不能为空");
-                return "register";  // 返回注册页面
-            }
-            if (StringUtils.isEmpty(userVo.getIdentity())) {
-                model.addAttribute("error", "身份证号不能为空");
-                return "register";  // 返回注册页面
-            }
-            if (StringUtils.isEmpty(userVo.getPwd())) {
-                model.addAttribute("error", "密码不能为空");
-                return "register";  // 返回注册页面
-            }
+            System.out.println("从请求中获取的参数：");
+            System.out.println("username: " + username);
+            System.out.println("password: " + password);
+            System.out.println("identity: " + identity);
 
-            // 设置用户的默认属性
+            // 手动设置 UserVo 的字段
+            userVo.setLoginname(username);      // 设置登录名
+            userVo.setPwd(password);           // 设置密码
+            userVo.setRealname(username);      // 同时设置真实姓名
+            userVo.setIdentity(identity);      // 设置身份证号
+
+            // 设置默认值
             userVo.setType(2);        // 设置用户类型为2，表示普通用户
             userVo.setAvailable(1);   // 设置用户状态为1，表示账号可用
 
-            // 调用服务层处理用户注册逻辑
+            System.out.println("处理后的注册参数：" + userVo);
+
+            // 参数校验
+            if (StringUtils.isEmpty(username)) {
+                throw new RuntimeException("用户名不能为空");
+            }
+            if (StringUtils.isEmpty(password)) {
+                throw new RuntimeException("密码不能为空");
+            }
+            if (StringUtils.isEmpty(identity)) {
+                throw new RuntimeException("身份证号不能为空");
+            }
+
+            // 调用注册服务
             userService.register(userVo);
 
             // 注册成功，重定向到登录页面
             return "redirect:/login/toLogin";
 
         } catch (Exception e) {
-            // 发生异常时打印异常堆栈
             e.printStackTrace();
-            // 将异常信息添加到model中，显示给用户
-            model.addAttribute("error", "注册失败：" + e.getMessage());
-            // 返回注册页面，让用户重新注册
+            // 将错误信息添加到 request 中
+            request.setAttribute("error", "注册失败：" + e.getMessage());
+            // 返回注册页面
             return "register";
         }
     }

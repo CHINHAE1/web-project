@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wn.carrentalplatform.mapper.CarMapper">
+
+    <sql id="base_column_list">
+        carnumber,
+        cartype,
+        color,
+        price,
+        rentprice,
+        deposit,
+        isrenting,
+        description,
+        carimg,
+        createtime
+    </sql>
+
+    <!-- 查询所有车辆 -->
+    <select id="queryCars" parameterType="com.wn.carrentalplatform.model.entity.Car" resultMap="baseCarResultMap">
+        select <include refid="base_column_list"> </include>
+        from bus_car
+        <where>
+            <if test="carnumber != null and carnumber != ''">
+                and carnumber like concat('%', #{carnumber}, '%')
+            </if>
+            <if test="cartype != null and cartype != ''">
+                and cartype like concat('%', #{cartype}, '%')
+            </if>
+            <if test="color != null and color != ''">
+                and color like concat('%', #{color}, '%')
+            </if>
+            <if test="description != null and description != ''">
+                and description like concat('%', #{description}, '%')
+            </if>
+            <if test="isrenting != null and isrenting != ''">
+                and isrenting = #{isrenting}
+            </if>
+        </where>
+    </select>
+
+</mapper>

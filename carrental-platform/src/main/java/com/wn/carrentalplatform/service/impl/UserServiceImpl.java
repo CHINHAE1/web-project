@@ -4,6 +4,7 @@ import com.wn.carrentalplatform.mapper.UserMapper;
 import com.wn.carrentalplatform.model.entity.User;
 import com.wn.carrentalplatform.model.vo.UserVo;
 import com.wn.carrentalplatform.service.UserService;
+import com.wn.carrentalplatform.util.DataGridView;
 import com.wn.carrentalplatform.util.PasswordUtils;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -131,5 +132,15 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             throw new RuntimeException("注册失败：" + e.getMessage());
         }
+    }
+
+    @Override
+    public DataGridView queryAllUser(UserVo userVo) {
+        return null;
+    }
+
+    @Override
+    public void addUser(UserVo userVo) {
+
     }
 }
