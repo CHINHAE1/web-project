@@ -1,7 +1,11 @@
 package com.wn.carrentalplatform.mapper;
 
 import com.wn.carrentalplatform.model.entity.User;
+import com.wn.carrentalplatform.model.vo.UserVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 这个类是：
@@ -33,4 +37,29 @@ public interface UserMapper {
      * 新增用户
      */
     int insert(User user);
+
+    /**
+     * 根据条件查询用户信息
+     */
+    List<User> queryUsers(User user);
+
+    /**
+     * 添加用户和角色关联
+     */
+    void addUserRole(@Param("uid") Integer uid, @Param("rid") Integer rid);
+
+     /**
+     * 修改用户
+     */
+    int updateUser(UserVo userVo);
+
+    /**
+     * 删除用户
+     */
+    int deleteUser(Integer userid);
+
+     /**
+     * 批量删除用户
+     */
+    int deleteBatchUsers(@Param("ids") Integer[] ids);
 }

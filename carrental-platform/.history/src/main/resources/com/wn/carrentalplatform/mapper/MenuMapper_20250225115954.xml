@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wn.carrentalplatform.mapper.MenuMapper">
+
+    <sql id="baseColumnList">
+        id, pid, title, href, spread, target, icon, available
+    </sql>
+
+    <select id="queryAllMenus" resultType="com.wn.carrentalplatform.model.entity.Menu">
+        select
+            <include refid="baseColumnList"/>
+        from sys_menu
+        <where>
+            <if test="available != null">
+                and available = #{available}
+            </if>
+            <if test="id != null">
+                and {id = #{id} or pid = #{id}}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryMenuByUid" resultType="com.wn.carrentalplatform.model.entity.Menu">
+        select distinct t1.*
+        from sys_menu t1
+        join sys_role_menu t2 on t1.id = t2.mid
+        join sys_user_user t3 on t2.rid = t3.rid
+        where t3.uid = #{param1}
+        and t1.available = #{param2}
+    </select>
+
+    <resultMap id="menu_resultMap" type="com.wn.carrentalplatform.model.entity.Menu">
+        <id column="id" property="id"></id>
+        <result column="pid" property="pid"></result>
+        <result column="title" property="title"></result>
+        <result column="href" property="href"></result>
+        <result column="spread" property="spread"></result>
+        <result column="target" property="target"></result>
+        <result column="icon" property="icon"></result>
+        <result column="available" property="available"></result>
+        </resultMap>
+
+        <!-- 查询所有菜单 -->
+        <select id="queryMenus" parameterType="com.wn.carrentalplatform.model.entity.Menu" resultMap="menu_resultMap">
+            select m.*
+            from sys_menu m
+            <where>
+                <if test="available != null">
+                    and available = #{available}
+                </if>
+            </where>
+        </select>
+        
+        
+
+</mapper>

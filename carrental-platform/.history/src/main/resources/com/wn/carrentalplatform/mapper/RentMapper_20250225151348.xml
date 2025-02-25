@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wn.carrentalplatform.mapper.RentMapper">
+
+    <!-- 新增一条出租单信息 -->
+    <insert id="addRent" parameterType="com.wn.carrentalplatform.model.entity.Rent">
+        insert into bus_rent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rentId != null">rentid,</if>
+            <if test="price != null">price,</if>
+            <if test="begindate != null">begindate,</if>
+            <if test="returndate != null">returndate,</if>
+            <if test="rentflag != null">rentflag,</if>
+            <if test="identity != null">identity,</if>
+            <if test="carnumber != null">carnumber,</if>
+            <if test="operrname != null">opername,</if>
+            <if test="createtime != null">createtime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rentId != null">#{rentId},</if>
+            <if test="price != null">#{price},</if>
+            <if test="begindate != null">#{begindate},</if>
+            <if test="returndate != null">#{returndate},</if>
+            <if test="rentflag != null">#{rentflag},</if>
+            <if test="identity != null">#{identity},</if>
+            <if test="carnumber != null">#{carnumber},</if>
+            <if test="opername != null">#{opername},</if>
+            <if test="createtime != null">#{createtime},</if>
+        </trim>
+    </insert>
+
+    
+</mapper>

@@ -3,6 +3,7 @@ package com.wn.carrentalplatform.service;
 import com.wn.carrentalplatform.model.entity.User;
 import com.wn.carrentalplatform.model.vo.UserVo;
 import com.wn.carrentalplatform.util.DataGridView;
+import com.wn.carrentalplatform.util.ResultObj;
 
 /**
  * 这个类是：
@@ -22,11 +23,41 @@ public interface UserService {
 
     void register(UserVo userVo);
 
-    /** 查询所有用户 */
-    DataGridView queryAllUser(UserVo userVo);
 
-    /** 添加用户 */
-    void addUser(UserVo userVo);
-    
+    /**
+     * 根据条件查询用户信息
+     */
+    DataGridView queryUsers(UserVo userVo);
+
+    /**
+     * 根据当前用户所拥有的角色
+     */
+    DataGridView queryRoleByUid(Integer uid);
+
+    /**
+     * 添加用户和角色关联
+     */
+    void addUserRole(UserVo userVo);
+
+    /**
+     * 添加用户
+     */
+    ResultObj addUser(UserVo userVo);
+
+    /**
+     * 修改用户
+     */
+    ResultObj updateUser(UserVo userVo);
+
+    /**
+     * 删除用户
+     */
+    int deleteUser(Integer userid);
+
+    /**
+     * 批量删除用户
+     */
+    int deleteBatchUsers(Integer[] ids);
+
     
 }

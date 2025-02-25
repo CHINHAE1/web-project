@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wn.carrentalplatform.mapper.UserMapper">
+    <!-- 根据用户名和密码查询用户 -->
+    <select id="login" resultType="com.wn.carrentalplatform.model.entity.User">
+        select userid, loginname, identity, realname, sex, address, phone, pwd, position, type, available
+        from sys_user
+        where loginname = #{loginname}
+          and pwd = #{pwd}
+    </select>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        userid
+        , loginname, identity, realname, sex, address, phone, pwd, position, type, available
+    </sql>
+
+    <!-- 根据登录名查询用户 -->
+    <select id="selectByLoginName" parameterType="string" resultType="com.wn.carrentalplatform.model.entity.User">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM sys_user
+        WHERE loginname = #{loginname}
+        LIMIT 1
+    </select>
+    <!-- 检查用户是否存在 -->
+    <select id="checkUserExists" resultType="int">
+        select count(*)
+        from sys_user
+        where loginname = #{loginname}
+           or identity = #{identity}
+           or phone = #{phone}
+    </select>
+
+    <!-- 添加用户 需要判断是否存在，不能为空，不能重复 -->
+    <insert id="insertUser" parameterType="com.wn.carrentalplatform.model.entity.User">
+        <if test="loginname != null and loginname != ''
+              and identity != null and identity != '' 
+              and realname != null and realname != '' 
+              and phone != null and phone != ''">
+            <if test="not exists (select 1 from sys_user where loginname = #{loginname})">
+                <if test="not exists (select 1 from sys_user where identity = #{identity})">
+                    <if test="not exists (select 1 from sys_user where phone = #{phone})">
+                        insert into sys_user
+                        (loginname, identity, realname, sex, address, phone, pwd, position, type, available)
+                        values
+                        (#{loginname}, #{identity}, #{realname}, #{sex}, #{address},
+                        #{phone}, #{pwd}, #{position}, #{type}, #{available})
+                    </if>
+                </if>
+            </if>
+        </if>
+    </insert>
+
+    <!-- 保存新用户和角色关联 -->
+    <insert id="insertUserRole" parameterType="map">
+        insert into sys_user_role (userid, roleid)
+        values (#{userid}, #{roleid})
+    </insert>
+
+
+    <!-- 新增用户 -->
+    <insert id="insert" parameterType="com.wn.carrentalplatform.model.entity.User">
+        INSERT INTO sys_user (
+            loginname,
+            identity,
+            realname,
+            sex,
+            address,
+            phone,
+            pwd,
+            position,
+            type,
+            available
+        )
+        VALUES (
+                   #{loginname},
+                   #{identity},
+                   #{realname},
+                   #{sex},
+                   #{address},
+                   #{phone},
+                   #{pwd},
+                   #{position},
+                   #{type},
+                   #{available}
+               )
+    </insert>
+
+    <!-- 根据条件查询用户信息 -->
+    <resultMap id="base_user_resultMap" type="com.wn.carrentalplatform.model.entity.User">
+        <id column="userid" property="userid"></id>
+        <result column="loginname" property="loginname"></result>
+        <result column="identity" property="identity"></result>
+        <result column="realname" property="realname"></result>
+        <result column="sex" property="sex"></result>
+        <result column="address" property="address"></result>
+        <result column="phone" property="phone"></result>
+        <result column="pwd" property="pwd"></result>
+        <result column="position" property="position"></result>
+        <result column="type" property="type"></result>
+        <result column="available" property="available"></result>
+    </resultMap>
+    
+    <sql id="user_sql_id">
+        userid,loginname,identity,realname,sex,address,phone,pwd,position
+    </sql>
+
+    <!-- 根据条件查询用户信息 -->
+    <select id="queryUsers" resultMap="base_user_resultMap" parameterType="com.wn.carrentalplatform.model.entity.User" >
+        select 
+            <include refid="user_sql_id"></include>
+        from sys_user
+        <where>
+            <if test="loginname != null and loginname != ''">
+                and loginname like concat('%',#{loginname},'%')
+            </if>
+            <if test="realname != null and realname != ''">
+                and realname like concat('%',#{realname},'%')
+            </if>
+            <if test="address != null and address != ''">
+                and address like concat('%',#{address},'%')
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone like concat('%',#{phone},'%')
+            </if>
+            <if test="identity != null and identity != ''">
+                and identity like concat('%',#{identity},'%')
+            </if>
+            <if test="sex != null">
+                and sex like concat('%',#{sex},'%')
+            </if>
+        </where>
+    </select>
+
+    <!-- 添加用户和角色关联 -->
+    <insert id="addUserRole">
+        insert into sys_user_role (uid, rid)
+        values (#{uid}, #{rid})
+    </insert>
+
+    <!-- 修改用户 -->
+    <update id="updateUser" parameterType="com.wn.carrentalplatform.model.vo.UserVo">
+        UPDATE sys_user
+        SET realname = #{realname},
+            loginname = #{loginname},
+            identity = #{identity},
+            phone = #{phone},
+            address = #{address},
+            sex = #{sex},
+            available = #{available}
+        WHERE userid = #{userid}
+    </update>
+
+    <!-- 删除用户 -->
+    <delete id="deleteUser" parameterType="Integer">
+        DELETE FROM sys_user WHERE userid = #{userid}
+    </delete>
+
+</mapper>

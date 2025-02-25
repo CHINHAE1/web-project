@@ -1,16 +1,28 @@
 package com.wn.carrentalplatform.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.wn.carrentalplatform.mapper.RoleMapper;
 import com.wn.carrentalplatform.mapper.UserMapper;
+import com.wn.carrentalplatform.model.entity.Role;
 import com.wn.carrentalplatform.model.entity.User;
 import com.wn.carrentalplatform.model.vo.UserVo;
 import com.wn.carrentalplatform.service.UserService;
 import com.wn.carrentalplatform.util.DataGridView;
 import com.wn.carrentalplatform.util.PasswordUtils;
+import com.wn.carrentalplatform.util.ResultObj;
+import com.wn.carrentalplatform.util.SysStatusMsg;
+
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 这个类是：
@@ -24,6 +36,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private RoleMapper roleMapper;
 
     /*@Override
     public User login(final UserVo userVo) {
@@ -134,13 +148,130 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+
     @Override
-    public DataGridView queryAllUser(UserVo userVo) {
-        return null;
+    public DataGridView queryUsers(UserVo userVo) {
+        Integer pageNum = userVo.getPage();
+        Integer pageSize = userVo.getLimit();
+        User user = new User();
+        BeanUtils.copyProperties(userVo, user);
+        PageHelper.startPage(pageNum, pageSize);
+        List<User> userList = userMapper.queryUsers(user);
+        PageInfo<User> info = new PageInfo<>(userList);
+        DataGridView dgv = new DataGridView(info.getTotal(), info.getList());
+        return dgv;
     }
 
     @Override
-    public void addUser(UserVo userVo) {
-
+    public DataGridView queryRoleByUid(Integer uid) {
+        // 1.查询所有可用的角色
+        Role role = new Role();
+        role.setAvailable(SysStatusMsg.AVAILABLE_TRUE);
+        List<Role> allRoles = roleMapper.queryRoles(role);
+        // 2.根据用户id查询用户所拥有的角色
+        List<Role> userRoles = roleMapper.queryRoleByUid(uid, SysStatusMsg.AVAILABLE_TRUE);
+        // 3.定义一个List<Map<String,Object>>j集合,存放封装后的角色信息
+        List<Map<String,Object>> list = new ArrayList<>();
+        // 4.遍历allRoles,把每个角色信息封装到Map中
+        for (Role r : allRoles) {
+            Boolean LAY_CHECKED = false; // 默认当前用户未拥有当前权限
+            // 5.遍历userRoles,当前用户拥有的权限信息
+            for (Role r2 : userRoles) {
+                // 6.判断用户拥有的角色有哪些,如果有,则设置其选中
+                if (r.getRoleid() == r2.getRoleid()) {
+                    LAY_CHECKED = true; // 表示当前用户拥有当前权限
+                }
+            }
+            // 7.把封装好的角色信息放到List<Map<String,Object>>集合中
+            Map<String,Object> map = new HashMap<>();
+            map.put("roleid", r.getRoleid());
+            map.put("rolename", r.getRolename());
+            map.put("roledesc", r.getRoledesc());
+            map.put("LAY_CHECKED", LAY_CHECKED);
+            // 8.把map集合放到list集合中
+            list.add(map);
+        }
+        // 9.把集合封装到DataGridView中
+        return new DataGridView(list);
     }
+
+    @Override
+    public void addUserRole(UserVo userVo) {
+        // 1.获取当前用户id
+        Integer uid = userVo.getUserid();
+        // 2.获取存放角色id集合
+        Integer[] rids = userVo.getIds();
+        // 3.删除指定uid拥有的角色
+        roleMapper.removeUserRoleByUid(uid);
+        // 4.添加当前用户和角色关联
+        if (rids != null && rids.length > 0) {
+            for (Integer rid : rids) {
+                userMapper.addUserRole(uid, rid);
+            }
+        }
+    }
+
+    @Override
+public ResultObj addUser(UserVo userVo) {
+    try {
+        // 1. 检查用户名是否已存在
+        User existUser = userMapper.selectByLoginName(userVo.getLoginname());
+        if (existUser != null) {
+            throw new RuntimeException("用户名已存在");
+        }
+        // 2. 密码加密
+        userVo.setPwd(PasswordUtils.encrypt(userVo.getPwd()));
+        // 3. 设置默认值
+        userVo.setType(2);        // 默认普通用户
+        userVo.setAvailable(1);   // 默认可用
+        // 4. 保存用户
+        userMapper.insert(userVo);
+        // 5. 保存用户和角色关联
+        if (userVo.getIds() != null && userVo.getIds().length > 0) { // 检查 ids 是否不为空
+            for (Integer roleId : userVo.getIds()) {
+                userMapper.addUserRole(userVo.getUserid(), roleId);
+            }
+        }
+        return ResultObj.ADD_SUCCESS;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResultObj.ADD_ERROR;
+    }       
+}
+
+    @Override
+    public ResultObj updateUser(UserVo userVo) {
+        try {
+            // 1. 检查用户名是否已存在
+            User existUser = userMapper.selectByLoginName(userVo.getLoginname());
+            if (existUser != null) {
+                throw new RuntimeException("用户名已存在");
+            }   
+            // 2. 密码加密
+            userVo.setPwd(PasswordUtils.encrypt(userVo.getPwd()));
+            // 3. 保存用户
+            userMapper.updateUser(userVo);
+            return ResultObj.UPDATE_SUCCESS;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultObj.UPDATE_ERROR;
+        }
+    }
+
+    @Override
+    public int deleteUser(Integer userid) {
+        try {
+            userMapper.deleteUser(userid);
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    @Override
+    public int deleteBatchUsers(Integer[] ids) {
+        return userMapper.deleteBatchUsers(ids);
+    }
+
 }

@@ -3,6 +3,7 @@ package com.wn.carrentalplatform.mapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.wn.carrentalplatform.model.entity.Menu;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -25,4 +26,15 @@ public interface MenuMapper {
      * 根据用户id查询菜单
      */
     List<Menu> queryMenuByUid(Integer uid, Integer available);
+
+    /**
+     * 超级管理员 显示菜单
+     * @return
+     */
+    List<Menu> queryMenus(Menu menu);
+
+    /**
+     * 根据角色id查询菜单
+     */
+    List<Menu> queryMenusByRoleId(@Param("rid") Integer rid,@Param("available") Integer available);
 }
